@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<title>Actor Tutorials - Lord-G Inc.</title>
+	</head>
+	<body>
+		<h1>Actor Tutorials</h1>
+		<h3>What counts as an actor?</h3>
+		<p>All complex objects in SMG1 and SMG2 inherit from the <code>LiveActor</code> class. Generally, anything that is not listed in the ProductMapObjDataTable is considered an actor.</p>
+		<h3>Creating your own actor</h3>
+		<p>In a new C++ file, we first create the class of our actor:</p>
+		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/Util.h</span><span style="color:#800000; ">"</span></span>
+<span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/LiveActor.h</span><span style="color:#800000; ">"</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">class</span> CustomActor <span style="color:#800080; ">:</span> <span style="color:#800000; font-weight:bold; ">public</span> LiveActor <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">public</span><span style="color:#e34adc; ">:</span></span>
+<span class="line_wrapper">    CustomActor<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span>pName<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> init<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> JMapInfoIter <span style="color:#808030; ">&amp;</span>rIter<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> movement<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> control<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"><span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">CustomActor<span style="color:#800080; ">::</span>CustomActor <span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">:</span> LiveActor<span style="color:#808030; ">(</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">    <span style="color:#696969; ">// Your code here</span></span>
+<span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
+		<p>The <code>constructor</code> (ctor) gets called when the actor first gets created. This has to be a copy of <code>LiveActor</code>'s ctor, though you can add extra code if you want.
+		<br>Both <code>movement</code> and <code>control</code> are called on every frame, feel free to place in your own code there.
+		<br>The <code>init</code> function gets called on the first frame the actor exists, and this is what it should look like:</p>
+		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">void</span> CustomActor<span style="color:#800080; ">::</span>init <span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> JMapInfoIter <span style="color:#808030; ">&amp;</span>rIter<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">    MR<span style="color:#800080; ">::</span>processInitFunction<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> rIter<span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">false</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    MR<span style="color:#800080; ">::</span>connectToSceneMapObj<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    LiveActor<span style="color:#800080; ">::</span>makeActorAppeared<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    MR<span style="color:#800080; ">::</span>validateClipping<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
+		<p><code>MR::processInitFunction</code> does basic actor initialization. You can also call it with a model name instead of a JMapInfoIter, but using the Iter is recommended.
+		<br><code>MR::connectToSceneMapObj</code> places the object at the position set in the StageData.
+		<br>However, it <b>does not</b> make it visible, so for visible actors, you also need to call <code>LiveActor::makeActorAppeared</code>. If your actor is supposed to be invisible, you can remove this line.
+		<br>Finally, we call <code>MR::validateClipping</code> to make the actor disappear when the player is far enough away. If you want it to always stay visible, call <code>MR::invalidateClipping</code> instead.
+		<br><br><b>Those are the basics of making a custom actor!</b></p>
+	</body>
+</html>
