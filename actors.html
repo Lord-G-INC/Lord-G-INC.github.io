@@ -12,8 +12,10 @@
 		<h1>Actor Tutorials</h1>
 		<h3>What counts as an actor?</h3>
 		<p>All complex objects in SMG1 and SMG2 inherit from the <code>LiveActor</code> class. Generally, anything that is not listed in the ProductMapObjDataTable is considered an actor.</p>
+		<b><i>This tutorial requires <a href="https://github.com/Lord-G-INC/Syati">Syati</a> and its dependencies.
+		Currently, this code only works with SMG2, though SMG1 support through <a href="projects.html#bussun">Bussun</a> is coming soon.</i></b>
 		<h3>Creating your own actor</h3>
-		<p>In a new C++ file, we first create the class of our actor:</p>
+		<p>In a new C++ header file, we first create the class of our actor:</p>
 		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/Util.h</span><span style="color:#800000; ">"</span></span>
 <span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/LiveActor.h</span><span style="color:#800000; ">"</span></span>
 <span class="line_wrapper"></span>
@@ -34,7 +36,7 @@
 		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">void</span> CustomActor<span style="color:#800080; ">::</span>init <span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> JMapInfoIter <span style="color:#808030; ">&amp;</span>rIter<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
 <span class="line_wrapper">    MR<span style="color:#800080; ">::</span>processInitFunction<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> rIter<span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">false</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
 <span class="line_wrapper">    MR<span style="color:#800080; ">::</span>connectToSceneMapObj<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">    LiveActor<span style="color:#800080; ">::</span>makeActorAppeared<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span classAdd ="line_wrapper">    LiveActor<span style="color:#800080; ">::</span>makeActorAppeared<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
 <span class="line_wrapper">    MR<span style="color:#800080; ">::</span>validateClipping<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
 <span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
 		<p><code>MR::processInitFunction</code> does basic actor initialization. You can also call it with a model name instead of a JMapInfoIter, but using the Iter is recommended.
