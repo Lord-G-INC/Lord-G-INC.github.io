@@ -16,7 +16,7 @@
 		Currently, this code only works with SMG2, though SMG1 support through <a href="projects.html#bussun">Bussun</a> is coming soon.</i></div>
 		<h3>Creating your own actor</h3>
 		<p>In a new C++ header file, we first create the class of our actor:</p>
-		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/Util.h</span><span style="color:#800000; ">"</span></span>
+		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; font-weight:bold; ">pragma</span><span style="color:#bb7977; font-weight:bold; "> once</span></span>
 <span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/LiveActor.h</span><span style="color:#800000; ">"</span></span>
 <span class="line_wrapper"></span>
 <span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">class</span> CustomActor <span style="color:#800080; ">:</span> <span style="color:#800000; font-weight:bold; ">public</span> LiveActor <span style="color:#800080; ">{</span></span>
@@ -26,9 +26,14 @@
 <span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> movement<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
 <span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> control<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
 <span class="line_wrapper"><span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span></pre>
+		<p>This header file can be placed anywhere in the include/ directory.
+		Now, inside the source/ directory, create a new C++ file and include your class:</p>
+<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">CustomActor.h</span><span style="color:#800000; ">"</span></span>
+<span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/Util.h</span><span style="color:#800000; ">"</span></span>
 <span class="line_wrapper"></span>
-<span class="line_wrapper">CustomActor<span style="color:#800080; ">::</span>CustomActor <span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">:</span> LiveActor<span style="color:#808030; ">(</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
-<span class="line_wrapper">    <span style="color:#696969; ">// Your code here</span></span>
+<span class="line_wrapper">CustomActor<span style="color:#800080; ">::</span>CustomActor <span style="color:#800080; ">:</span> LiveActor<span style="color:#808030; ">(</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">    </span>
 <span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
 		<p>The <code>constructor</code> (ctor) gets called when the actor first gets created. This has to be a copy of <code>LiveActor</code>'s ctor, though you can add extra code if you want.
 		<br>Both <code>movement</code> and <code>control</code> are called on every frame, feel free to place in your own code there.
@@ -43,6 +48,25 @@
 		<br><code>MR::connectToSceneMapObj</code> places the object at the position set in the StageData.
 		<br>However, it <b>does not</b> make it visible, so for visible actors, you also need to call <code>LiveActor::makeActorAppeared</code>. If your actor is supposed to be invisible, you can remove this line.
 		<br>Finally, we call <code>MR::validateClipping</code> to make the actor disappear when the player is far enough away. If you want it to always stay visible, call <code>MR::invalidateClipping</code> instead.
-		<br><br><b>Those are the basics of making a custom actor!</b></p>
+		<br><br>Now, to make the game recognize our new actor, we need to use the <code>ExtNameObjFactory</code>. Open its header file in the include/ directory. First, include your header file at the top:</p>
+<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">CustomActor.h</span><span style="color:#800000; ">"</span></span></pre>
+		<p>Now, in the <code>cNewCreateNameObjTable</code>, add this:</p>
+<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800080; ">{</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Custom</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> createExtActor<span style="color:#800080; ">&lt;</span>CustomActor<span style="color:#800080; ">&gt;</span> <span style="color:#800080; ">}</span></span></pre>
+		<p>This makes the game know what your actor is called. From now on, placing a <code>Custom</code> object in the level will spawn in your actor.</p>
+		<p><b>If your actor is visible, make sure you also have a Custom.arc file in the ObjectData/ folder of SMG2.</b></p>
+		<h3>About HitSensors</h3>
+		<p>To make the player be able to interact with your actor, you need to set up a HitSensor. HitSensors are always spherical, and you need to specify a radius in game units when creating it.
+		Add the following to your init function:</p>
+<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper">initHitSensor<span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">MR<span style="color:#800080; ">::</span>addHitSensorMapObj<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Body</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">8</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">100.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> TVec3f<span style="color:#808030; ">(</span><span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
+		<p>Firstly, we initialize exactly one HitSensor. Then we add it to our object with the following parameters:</p>
+		<ul>
+			<li><code>this</code> is a pointer to the custom actor.</li>
+			<li><code>"Body"</code> is the name of the sensor we want to apply. When using multiple HitSensors, you can use this to distinguish between them.</li>
+			<li><code>8</code> represents the recieverCount. This specifies how many objects can interact with the HitSensor at once.</li>
+			<li><code>100.0f</code> is the radius of the HitSensor, in this case 100 units.</li>
+			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the middle of our actor.</li>
+		</ul>
+		<!--virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor *pSender, HitSensor *pReceiver);-->
 	</body>
 </html>
