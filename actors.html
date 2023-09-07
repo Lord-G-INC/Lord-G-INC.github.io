@@ -67,6 +67,12 @@
 			<li><code>100.0f</code> is the radius of the HitSensor, in this case 100 units.</li>
 			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the middle of our actor.</li>
 		</ul>
-		<!--virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor *pSender, HitSensor *pReceiver);-->
+		<p>Now we also need to handle something colliding with that HitSensor. To do that, add the following function to your C++ file and a <code>virtual bool</code> in your header as well:</p>
+<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">bool</span> CustomActor<span style="color:#800080; ">::</span>receiveMsgPlayerAttack <span style="color:#808030; ">(</span>u32 msg<span style="color:#808030; ">,</span> HitSensor <span style="color:#808030; ">*</span>pSender<span style="color:#808030; ">,</span> HitSensor <span style="color:#808030; ">*</span>pReceiver<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">    </span>
+<span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
+		<p>Here we are given the type of collision that occured (msg), as well as two HitSensor pointers.
+		There are several functions you can call to easily figure out what kind of interaction happened, such as:</p> 
+<!--virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor *pSender, HitSensor *pReceiver);-->
 	</body>
 </html>
