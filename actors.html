@@ -72,7 +72,10 @@
 <span class="line_wrapper">    </span>
 <span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
 		<p>Here we are given the type of collision that occured (msg), as well as two HitSensor pointers.
-		There are several functions you can call to easily figure out what kind of interaction happened, such as:</p> 
+		To figure out what the sender is, you can call one of the 25 <code>MR::isSensor...</code> functions. When checking for the player, using <code>MR::isSensorPlayerOrYoshiOrRide(pSender);</code> is recommended.
+		To figure out what type of interaction ocurred, use one of the 105 <code>MR::isMsg</code> functions. For example, the player spin-attacking your actor can be checked by calling <code>MR::isMsgPlayerSpinAttack(msg);</code>.
+		Remember that the function has to return a bool. This is to let the game know whether the hit was valid or not. For example, if the player interacts with it and true is returned, a certain particle effect will be created to show the impact.</p>
+		<div class="alert alert-primary">To see which functions best fit your purpose, look at the HitSensor.h file in Syati's include/Game/LiveActor directory.</div>
 <!--virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor *pSender, HitSensor *pReceiver);-->
 	</body>
 </html>
