@@ -61,7 +61,7 @@
 <span class="line_wrapper">MR<span style="color:#800080; ">::</span>addHitSensorMapObj<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Body</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">8</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">100.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> TVec3f<span style="color:#808030; ">(</span><span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
 		<p>Firstly, we initialize exactly one HitSensor. Then we add it to our object with the following parameters:</p>
 		<ul>
-			<li><code>this</code> is a pointer to the custom actor.</li>
+			<li><code>this</code> is a pointer to our custom actor.</li>
 			<li><code>"Body"</code> is the name of the sensor we want to apply. When using multiple HitSensors, you can use this to distinguish between them.</li>
 			<li><code>8</code> represents the recieverCount. This specifies how many objects can interact with the HitSensor at once.</li>
 			<li><code>100.0f</code> is the radius of the HitSensor, in this case 100 units.</li>
@@ -76,6 +76,16 @@
 		To figure out what type of interaction ocurred, use one of the 105 <code>MR::isMsg</code> functions. For example, the player spin-attacking your actor can be checked by calling <code>MR::isMsgPlayerSpinAttack(msg);</code>.
 		Remember that the function has to return a bool. This is to let the game know whether the hit was valid or not. For example, if the player interacts with it and true is returned, a certain particle effect will be created to show the impact.</p>
 		<div class="alert alert-primary">To see which functions best fit your purpose, look at the HitSensor.h file in Syati's include/Game/LiveActor directory.</div>
-<!--virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor *pSender, HitSensor *pReceiver);-->
+		<h3>About Collision</h3>
+		<p>Some actors also feature collision on top of a HitSensor, which needs to be initialized seperately.
+		To do that, add this to the init function of your actor:</p>
+<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper">MR<span style="color:#800080; ">::</span>initCollisionParts<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Custom</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> getSensor<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">body</span><span style="color:#800000; ">"</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">nullptr</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
+		<p>This function gets passed the following arguments:</p>
+		<ul>
+			<li><code>this</code> is a pointer to our custom actor.</li>
+			<li><code>"Custom"</code> is the name of the collision file that the game should use. In this case, the game uses the Custom.kcl file in ObjectData/Custom.arc.</li>
+			<li><code>getSensor("Body")</code> is needed to let the game know where to place the CollisionParts. Here we simply get the sensor we just created named "Body".</li>
+			<li><code>nullptr</code> is usually a MtxPtr. When given a valid MtxPtr, the game will tie the collision to that matrix. Otherwise, it stays at the HitSensor's position.</li>
+		</ul>
 	</body>
 </html>
