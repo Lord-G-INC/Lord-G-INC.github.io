@@ -87,5 +87,25 @@
 			<li><code>getSensor("Body")</code> is needed to let the game know where to place the CollisionParts. Here we simply get the sensor we just created named "Body".</li>
 			<li><code>nullptr</code> is usually a MtxPtr. When given a valid MtxPtr, the game will tie the collision to that matrix. Otherwise, it stays at the HitSensor's position.</li>
 		</ul>
+		<p>Now, if you want the actor to have collision, you probably also want it to interact with walls, floors and ceilings. To do that, initialize a binder:</p>
+<pre class="code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper">initBinder<span style="color:#808030; ">(</span><span style="color:#008000; ">100.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
+		<p>The first argument should match the radius of your HitSensor. Now your actor will no longer pass through walls or floor, and you can check its state by running any of the <code>MR::isBinded...</code> functions.</p>
+		<h3>Using ActorInfo</h3>
+		<p>You can eliminate the need for a bunch of code in your <code>init</code> function by using a few ActorInfo bcsv files. Here is an example of a InitActor.bcsv from the <a href="projects.html#pt">Project Template</a>'s RedCoin:</p>
+		<img src="https://media.discordapp.net/attachments/1119750120657911849/1150562740436471950/image.png?width=833&height=359">
+		<p>Here's a breakdown of what these entries do:</p>
+		<ul>
+			<li><i>DefaultPos</i> will call <code>MR::initDefaultPos</code> if Data is set to o (equivalent of true).</li>
+			<li><i>Executor</i> will call <code>MR::connectToScene&lt;Type&gt;&lt;Light&gt;</code> with &lt;Type&gt; being what Data is.</li>
+			<li><i>Light</i> will call <code>MR::connectToScene&lt;Type&gt;&lt;Light&gt;</code> with &lt;Light&gt; being what Data is (in this example, <code>MR::connectToSceneItemStrongLight</code>).</li>
+			<li><i>Model</i> tells the game what model to load in and from what file.</li>
+			<li><i>Rail</i></li>
+			<li><i>Binder</i> will call <code>initBinder(&lt;radius&gt;, ...)</code> with &lt;radius&gt; being what Param00F32 is.</li>
+			<li><i>StarPointer</i> will call <code>initStarPointerTarget</code>, to make it a target for the Star Pointer if the Data field is set to o. Here it is set to x however (equivalent of false).</li>
+			<li><i>Sound</i> will specify the sound group to use.</li>
+			<li><i>Clipping</i> specifies at what distance the object is far enough away to disappear.</li>
+			<li><i>DebugNode</i> is useless lol.</li>
+			<li><i>UseScaleForParam</i> allows you to specify whether the actor should scale or not.</li>
+		</ul>
 	</body>
 </html>
