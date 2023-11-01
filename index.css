@@ -1,0 +1,60 @@
+.carousel {
+    overflow-x: scroll;
+    white-space: nowrap;
+    padding: 10px;
+    width: 1200px;
+    display: flex; /* Use Flexbox to align cards */
+}
+.card {
+    display: inline-block;
+    width: 7.7rem; /* Adjust as needed */
+    margin-right: 10px; /* Adjust as needed */
+    background-color: #1b193e;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    flex: 0 0 18rem;
+    white-space: normal;
+}
+body.form-control {
+    background-color: #11101f;
+    border: 2px solid #99C;
+    padding: 10px;
+    margin: 10px;
+    width: 98.5%;
+}
+h1 {
+    color: #FFF;
+    text-align: center;
+    font-family: Verdana;
+}
+h3 {
+    color: #EEE;
+    text-align: center;
+}
+h5 {
+    color: #CCC;
+    text-align: center;
+}
+p { 
+    color: #FFF;
+}
+b {
+    color: #FFF;
+}
+div.alert.alert-success {
+    background-color: #1b193e;
+}
+.card {
+    width: 18rem;
+}
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(27,25,62,0.8);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(50,50,100,1); 
+}
