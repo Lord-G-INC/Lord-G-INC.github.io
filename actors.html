@@ -7,9 +7,13 @@
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<title>Actor Tutorials - Lord-G Inc.</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+		<script>hljs.highlightAll();</script>
 	</head>
 	<body class="form-control">
-		<img src="banner.png" onclick="location.href = 'index.html'" style="width: 100%; height: 30vh">
+		<img src="Resources/banner.png" onclick="location.href = 'index.html'" style="width: 100%; height: 30vh">
 		<h1>Actor Tutorials</h1>
 		<h3>What counts as an actor?</h3>
 		<p>All complex objects in SMG1 and SMG2 inherit from the <code>LiveActor</code> class. Generally, anything that is not listed in the ProductMapObjDataTable is considered an actor.</p>
@@ -17,49 +21,48 @@
 		Currently, this code only works with SMG2, though SMG1 support is coming soon.</i></div>
 		<h3>Creating your own actor</h3>
 		<p>In a new C++ header file, we first create the class of our actor:</p>
-		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; font-weight:bold; ">pragma</span><span style="color:#bb7977; font-weight:bold; "> once</span></span>
-<span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/LiveActor.h</span><span style="color:#800000; ">"</span></span>
-<span class="line_wrapper"></span>
-<span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">class</span> CustomActor <span style="color:#800080; ">:</span> <span style="color:#800000; font-weight:bold; ">public</span> LiveActor <span style="color:#800080; ">{</span></span>
-<span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">public</span><span style="color:#e34adc; ">:</span></span>
-<span class="line_wrapper">    CustomActor<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span>pName<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> init<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> JMapInfoIter <span style="color:#808030; ">&amp;</span>rIter<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> movement<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">virtual</span> <span style="color:#800000; font-weight:bold; ">void</span> control<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper"><span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper"></span></pre>
+		<pre><code class="alert alert-primary">#pragma once
+#include "Game/LiveActor.h"
+
+class CustomActor : public LiveActor {
+public:
+    CustomActor(const char *pName);
+    virtual void init(const JMapInfoIter &rIter);
+    virtual void movement();
+    virtual void control();
+};</code></pre>
 		<p>This header file can be placed anywhere in the include/ directory.
 		Now, inside the source/ directory, create a new C++ file and include your class:</p>
-		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">CustomActor.h</span><span style="color:#800000; ">"</span></span>
-<span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">Game/Util.h</span><span style="color:#800000; ">"</span></span>
-<span class="line_wrapper"></span>
-<span class="line_wrapper">CustomActor<span style="color:#800080; ">::</span>CustomActor<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">:</span> LiveActor<span style="color:#808030; ">(</span>pName<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
-<span class="line_wrapper">    </span>
-<span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
+		<pre><code class="alert alert-primary">#include "CustomActor.h"
+#include "Game/Util.h"
+
+CustomActor::CustomActor(const char *pName) : LiveActor(pName) {
+	
+}</code></pre>
 		<p>The <code>constructor</code> (ctor) gets called when the actor first gets created. This has to be a copy of <code>LiveActor</code>'s ctor, though you can add extra code if you want.
 		<br>Both <code>movement</code> and <code>control</code> are called on every frame, feel free to place in your own code there.
 		<br>The <code>init</code> function gets called on the first frame the actor exists, and this is what it should look like:</p>
-		<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">void</span> CustomActor<span style="color:#800080; ">::</span>init <span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> JMapInfoIter <span style="color:#808030; ">&amp;</span>rIter<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
-<span class="line_wrapper">    MR<span style="color:#800080; ">::</span>processInitFunction<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> rIter<span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">false</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">    MR<span style="color:#800080; ">::</span>connectToSceneMapObj<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span classAdd ="line_wrapper">    LiveActor<span style="color:#800080; ">::</span>makeActorAppeared<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">    MR<span style="color:#800080; ">::</span>validateClipping<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
+		<pre><code class="alert alert-primary">void CustomActor::init (const JMapInfoIter &rIter) {
+	MR::processInitFunction(this, rIter, false);
+	MR::connectToSceneMapObj(this);
+	LiveActor::makeActorAppeared();
+	MR::validateClipping(this);
+}</code></pre>
 		<p><code>MR::processInitFunction</code> does basic actor initialization. You can also call it with a model name instead of a JMapInfoIter, but using the Iter is recommended.
 		<br><code>MR::connectToSceneMapObj</code> places the object at the position set in the StageData.
 		<br>However, it <b>does not</b> make it visible, so for visible actors, you also need to call <code>LiveActor::makeActorAppeared</code>. If your actor is supposed to be invisible, you can remove this line.
 		<br>Finally, we call <code>MR::validateClipping</code> to make the actor disappear when the player is far enough away. If you want it to always stay visible, call <code>MR::invalidateClipping</code> instead.
 		<br><br>Now, to make the game recognize our new actor, we need to use the <code>ExtNameObjFactory</code>. Open its header file in the include/ directory. First, include your header file at the top:</p>
-<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#004a43; ">#</span><span style="color:#004a43; ">include </span><span style="color:#800000; ">"</span><span style="color:#40015a; ">CustomActor.h</span><span style="color:#800000; ">"</span></span></pre>
+		<pre><code class="alert alert-primary">#include "CustomActor.h"</code></pre>
 		<p>Now, in the <code>cNewCreateNameObjTable</code>, add this:</p>
-<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800080; ">{</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Custom</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> createExtActor<span style="color:#800080; ">&lt;</span>CustomActor<span style="color:#800080; ">&gt;</span> <span style="color:#800080; ">}</span></span></pre>
+		<pre><code class="alert alert-primary">{ "Custom", createExtActor&lt;CustomActor&gt; }</code></pre>
 		<p>This makes the game know what your actor is called. From now on, placing a <code>Custom</code> object in the level will spawn in your actor.</p>
 		<p><b>If your actor is visible, make sure you also have a Custom.arc file in the ObjectData/ folder of SMG2.</b></p>
 		<h3>About HitSensors</h3>
 		<p>To make the player be able to interact with your actor, you need to set up a HitSensor. HitSensors are always spherical, and you need to specify a radius in game units when creating it.
 		Add the following to your init function:</p>
-<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper">initHitSensor<span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
-<span class="line_wrapper">MR<span style="color:#800080; ">::</span>addHitSensorMapObj<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Body</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">8</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">100.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> TVec3f<span style="color:#808030; ">(</span><span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
+		<pre><code class="alert alert-primary">initHitSensor(1);
+MR::addHitSensorMapObj(this, "Body", 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));</code></pre>
 		<p>Firstly, we initialize exactly one HitSensor. Then we add it to our object with the following parameters:</p>
 		<ul>
 			<li><code>this</code> is a pointer to our custom actor.</li>
@@ -69,9 +72,9 @@
 			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the middle of our actor.</li>
 		</ul>
 		<p>Now we also need to handle something colliding with that HitSensor. To do that, add the following function to your C++ file and a <code>virtual bool</code> in your header as well:</p>
-<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">bool</span> CustomActor<span style="color:#800080; ">::</span>receiveMsgPlayerAttack <span style="color:#808030; ">(</span>u32 msg<span style="color:#808030; ">,</span> HitSensor <span style="color:#808030; ">*</span>pSender<span style="color:#808030; ">,</span> HitSensor <span style="color:#808030; ">*</span>pReceiver<span style="color:#808030; ">)</span> <span style="color:#800080; ">{</span></span>
-<span class="line_wrapper">    </span>
-<span class="line_wrapper"><span style="color:#800080; ">}</span></span></pre>
+		<pre><code class="alert alert-primary">bool CustomActor::receiveMsgPlayerAttack (u32 msg, HitSensor *pSender, HitSensor *pReceiver) {
+
+}</code></pre>
 		<p>Here we are given the type of collision that occured (msg), as well as two HitSensor pointers.
 		To figure out what the sender is, you can call one of the 25 <code>MR::isSensor...</code> functions. When checking for the player, using <code>MR::isSensorPlayerOrYoshiOrRide(pSender)</code> is recommended.
 		To figure out what type of interaction ocurred, use one of the 105 <code>MR::isMsg</code> functions. For example, the player spin-attacking your actor can be checked by calling <code>MR::isMsgPlayerSpinAttack(msg)</code>.
@@ -80,7 +83,7 @@
 		<h3>About Collision</h3>
 		<p>Some actors also feature collision on top of a HitSensor, which needs to be initialized seperately.
 		To do that, add this to the init function of your actor:</p>
-<pre class="alert alert-primary code_syntax" style="color:#000000;background:#ffffff;"><span class="line_wrapper">MR<span style="color:#800080; ">::</span>initCollisionParts<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">this</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Custom</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> getSensor<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">body</span><span style="color:#800000; ">"</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">nullptr</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
+		<pre><code class="alert alert-primary">MR::initCollisionParts(this, "Custom", getSensor("body"), nullptr);</code></pre>
 		<p>This function gets passed the following arguments:</p>
 		<ul>
 			<li><code>this</code> is a pointer to our custom actor.</li>
@@ -89,7 +92,7 @@
 			<li><code>nullptr</code> is usually a MtxPtr. When given a valid MtxPtr, the game will tie the collision to that matrix. Otherwise, it stays at the HitSensor's position.</li>
 		</ul>
 		<p>Now, if you want the actor to have collision, you probably also want it to interact with walls, floors and ceilings. To do that, initialize a binder:</p>
-<pre class="code_syntax alert alert-primary" style="color:#000000;background:#ffffff;"><span class="line_wrapper">initBinder<span style="color:#808030; ">(</span><span style="color:#008000; ">100.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.0</span><span style="color:#006600; ">f</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span></pre>
+		<pre><code class="alert alert-primary">initBinder(100.0f, 0.0f, 0);</code></pre>
 		<p>The first argument should match the radius of your HitSensor. Now your actor will no longer pass through walls or floor, and you can check its state by running any of the <code>MR::isBinded...</code> functions.</p>
 		<h3>Using ActorInfo</h3>
 		<p>You can eliminate the need for a bunch of code in your <code>init</code> function by using a few ActorInfo bcsv files. Here is an example of a InitActor.bcsv from the <a href="projects.html#pt">Project Template</a>'s RedCoin:</p>
