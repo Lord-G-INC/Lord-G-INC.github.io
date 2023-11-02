@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+    <meta name="description" content="A Database to keep track of all the Super Mario Galaxy mods released and/or WIP">
+    <title>Super Mario Galaxy Hack Database</title>
+    <link rel="icon" href="res/img/favicon.ico">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="res/css/main.css">
+
+    <!-- Alternate Stylesheets -->
+    <link rel="stylesheet" href="res/css/dark.css" title="Dark" disabled>
+    <link rel="stylesheet" href="res/css/light.css" title="Light" disabled>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <!-- JavaScript -->
+    <script>
+        window.$docsify = {
+            // GENERAL
+            // -----------------------------------------------------------------
+            name        : 'Super Mario Galaxy Hack Database',
+            homepage    : 'res/main/index.md',
+            logo        : 'res/img/icon.png',
+            loadNavbar  : 'res/header.md',
+            mergeNavbar : false,
+            loadSidebar : 'res/sidebar.md',
+            relativePath: true,
+            alias       : {
+                // If any more mods are added, they must be added to here.
+                '/'                                                   : 'res/main/index.md',
+                '/Main'                                               : 'res/main/index.md',
+                '/Sidebar'                                            : 'res/sidebar.md',
+                '/About'                                              : 'res/main/about.md',
+                '/Other'                                              : 'res/main/other.md',              
+                '/Released'                                           : 'Released/index.md',
+                '/Unreleased'                                         : 'Unreleased/index.md',
+                '/Cancelled'                                          : 'Cancelled/index.md',
+                '/Templates'                                          : 'Templates/index.md',
+                '/Cancelled/SMG2More'                                 : 'Cancelled/SMG2More.md',
+                '/Released/Beta_Buoy_Base'                            : 'Released/Beta_Buoy_Base.md',
+                '/Released/Pipeground'                                : 'Released/Pipeground.md',
+                '/Released/SMG2Master'                                : 'Released/SMG2Master.md',
+                '/Released/SMG69'                                     : 'Released/SMG69.md',
+                '/Released/SMGCC'                                     : 'Released/SMGCC.md',
+                '/Released/SMGSFE'                                    : 'Released/SMGSFE.md',
+                '/Released/SMGTKGS'                                   : 'Released/SMGTKGS.md',
+                '/Released/CloudyPlains'                              : 'Released/CloudyPlains.md',
+                '/Templates/TEMPLATE_RELEASED'                        : 'Templates/TEMPLATE_RELEASED.md',
+                '/Templates/TEMPLATE_WIP'                             : 'Templates/TEMPLATE_WIP.md',
+                '/Unreleased/GT'                                      : 'Unreleased/GT.md',
+                '/Unreleased/SM3DG'                                   : 'Unreleased/SM3DG.md',
+                '/Unreleased/SMGA'                                    : 'Unreleased/SMGA.md',
+            },
+
+            // NAVIGATION
+            // -----------------------------------------------------------------
+            auto2top   : true,
+            maxLevel   : 4,
+            subMaxLevel: 4,
+
+            // PLUGINS
+            // -----------------------------------------------------------------
+            executeScript: true,
+            search: {
+                depth      : 3,
+                noData     : 'No results!',
+                placeholder: 'Search...'
+            },
+            themeable    : {
+                readyTransition : true,
+                responsiveTables: true
+            },
+            tabs: {
+                persist    : true,
+                sync       : true
+            }
+        };
+    </script>
+    <script src="res/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/external-script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+</body>
+</html>
