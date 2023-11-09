@@ -18,6 +18,7 @@ function requestPage (pageToGet) {
     var galleryHtml = "";
 
     $("#modName").text(page.modName);
+    $("#authorName").text(page.authorName);
     $("#modRatings").text(page.ratingInfo);
     $("#modLogo").attr("src", page.logoSrc);
     // Formatting through HTML allowed
