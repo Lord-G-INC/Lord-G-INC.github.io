@@ -1,15 +1,15 @@
 [
     {
-        modName: "SMG2 - Floor Is Lava",
-        authorName: "Bavario",
-        logoSrc: "https://cdn.discordapp.com/attachments/678455687809990656/1122602886032007168/Untitled499_20230625145418.png?ex=655a5be8&is=6547e6e8&hm=de68601ba40186158934928cb363c3d0f2c65e133722ebc50b76cc76b03eeeed&",
-        description: "This mod changes the Floor in World 1 to Lava. <i>Styling with <b>HTML</b> still works!</i>",
-        information: "Total Level Count: 7<br>Total Star Count: 18",
-        ratingInfo: "⭐⭐⭐⭐⭐",
-        downloadUrl: "https://gamebanana.com/mods/download/444737#",
-        creditInfo: "Maker: Bavario<br>Spin Drill Patch: Galaxy Master",
-        galleryInfo: "",
-        galleryImages: [
+        "modName": "SMG2 - Floor Is Lava",
+        "authorName": "Bavario",
+        "logoSrc": "https://cdn.discordapp.com/attachments/678455687809990656/1122602886032007168/Untitled499_20230625145418.png?ex=655a5be8&is=6547e6e8&hm=de68601ba40186158934928cb363c3d0f2c65e133722ebc50b76cc76b03eeeed&",
+        "description": "This mod changes the Floor in World 1 to Lava. <i>Styling with <b>HTML</b> still works!</i>",
+        "information": "Total Level Count: 7<br>Total Star Count: 18",
+        "ratingInfo": "⭐⭐⭐⭐⭐",
+        "downloadUrl": "https://gamebanana.com/mods/download/444737#",
+        "creditInfo": "Maker: Bavario<br>Spin Drill Patch: Galaxy Master",
+        "galleryInfo": "",
+        "galleryImages": [
             "https://images.gamebanana.com/img/ss/mods/530-90_64691815cb2ca.jpg",
             "https://images.gamebanana.com/img/ss/mods/100-90_64691821d704e.jpg"
         ]
