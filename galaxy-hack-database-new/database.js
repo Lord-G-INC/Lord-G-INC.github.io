@@ -9,7 +9,7 @@ function fetchDatabase () {
         url: "database.json",
         success: function (response) {
             modDatabase = response;
-            requestPage(localStorage.getItem("requestedPage"));
+            requestPage(localStorage.getItem("requestedPage") || "SMG2 - Floor Is Lava");
         }
     });
 }
