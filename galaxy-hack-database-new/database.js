@@ -8,8 +8,7 @@ function fetchDatabase () {
         type: "GET",
         url: "database.json",
         success: function (response) {
-            console.log(response);
-            modDatabase = JSON.parse(response);
+            modDatabase = response;
             requestPage(localStorage.getItem("requestedPage"));
         }
     });
