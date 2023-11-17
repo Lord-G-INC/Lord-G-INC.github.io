@@ -39,7 +39,7 @@ public:
 CustomActor::CustomActor(const char *pName) : LiveActor(pName) {
 	
 }</code></pre>
-		<p>The <code>constructor</code> (ctor) gets called when the actor first gets created. This has to be a copy of <code>LiveActor</code>'s ctor, though you can add extra code if you want.
+		<p>The <code>constructor</code> (ctor) gets called when the actor first gets created. For creating <i>placeable</i> objects, you have to inherit <code>LiveActor::LiveActor</code>.
 		<br>Both <code>movement</code> and <code>control</code> are called on every frame, feel free to place in your own code there.
 		<br>The <code>init</code> function gets called on the first frame the actor exists, and this is what it should look like:</p>
 		<pre><code class="alert alert-primary">void CustomActor::init (const JMapInfoIter &rIter) {
@@ -69,16 +69,23 @@ MR::addHitSensorMapObj(this, "Body", 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));</code
 			<li><code>"Body"</code> is the name of the sensor we want to apply. When using multiple HitSensors, you can use this to distinguish between them.</li>
 			<li><code>8</code> represents the receiverCount. This specifies how many objects can interact with the HitSensor at once.</li>
 			<li><code>100.0f</code> is the radius of the HitSensor, in this case 100 units.</li>
-			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the middle of our actor.</li>
+			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the origin of our actor.</li>
 		</ul>
-		<p>Now we also need to handle something colliding with that HitSensor. To do that, add the following function to your C++ file and a <code>virtual bool</code> in your header as well:</p>
+		<p>Now we also need to handle something colliding with that HitSensor. To do that, first add the following to your header file:</p>
+		<pre><code class="alert alert-primary">class CustomActor : public LiveActor {
+public:
+	// ...
+	virtual bool receiveMsgPlayerAttack(u32, HitSensor *, HitSensor *);
+	// ...
+}</code></pre>
+		<p>After that, to actually define the function, place this function into your C++ file:</p>
 		<pre><code class="alert alert-primary">bool CustomActor::receiveMsgPlayerAttack (u32 msg, HitSensor *pSender, HitSensor *pReceiver) {
 
 }</code></pre>
 		<p>Here we are given the type of collision that occured (msg), as well as two HitSensor pointers.
 		To figure out what the sender is, you can call one of the 25 <code>MR::isSensor...</code> functions. When checking for the player, using <code>MR::isSensorPlayerOrYoshiOrRide(pSender)</code> is recommended.
 		To figure out what type of interaction ocurred, use one of the 105 <code>MR::isMsg</code> functions. For example, the player spin-attacking your actor can be checked by calling <code>MR::isMsgPlayerSpinAttack(msg)</code>.
-		Remember that the function has to return a bool. This is to let the game know whether the hit was valid or not. For example, if the player interacts with it and true is returned, a certain particle effect will be created to show the impact.</p>
+		Remember that the function has to return a bool. This is needed to let the sender of the message know that there was an interaction (<code>true</code>) or if it was simply ignored (<code>false</code>). For example, if the player interacts with it and true is returned, a certain particle effect will be created to show the impact.</p>
 		<div class="alert alert-primary">To see which functions best fit your purpose, look at the HitSensor.h file in Syati's include/Game/LiveActor directory.</div>
 		<h3>About Collision</h3>
 		<p>Some actors also feature collision on top of a HitSensor, which needs to be initialized seperately.
