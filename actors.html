@@ -84,7 +84,7 @@ MR::addHitSensorMapObj(this, "Body", 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));</code
 		</ul>
 		<p>It is also possible to add different types of HitSensors by using a different <code>MR::addHitSensor...</code> function, or by simply using <code>MR::addHitSensor</code> itself, which adds a u32 parameter for the type of sensor:</p>
 		<pre><code class="alert alert-primary">MR::addHitSensor(this, "Body", ATYPE_MAP_OBJ, 8, 100.0f, TVec3f(0));</code></pre>
-		<p>To see which types you can use or what functions are available, check the HitSensor.h file in Syati's include/Game/LiveActor directory.</p><br>
+		<p>To see which types you can use or what functions are available, check the HitSensor.h file in Syati's include/Game/LiveActor directory.</p>
 		<p>Once our HitSensor is added, we also need to handle something interacting with that HitSensor. For this, you can use four different functions depending on your needs.</p>
 		<pre><code class="alert alert-primary">class CustomActor : public LiveActor {
 public:
@@ -96,10 +96,12 @@ public:
 	// ...
 }</code></pre>
 		<div class="alert alert-primary">To see which message you are working with or what functions are available, look at the HitSensor.h file in Syati's include/Game/LiveActor directory.</div>
-		<p><code>attackSensor</code> is called whenever the HitSensor collides with another HitSensor. The first HitSensor is the one from our custom actor, the second one is what it collided with.</p>
-		<p><code>receiveMsgPlayerAttack</code> is called whenever the Player interacts with the HitSensor. The u32 is the message that was sent from the Player to the actor. The first HitSensor is from the player, the second one is from our actor.</p>
-		<p><code>receiveMsgEnemyAttack</code> is called whenever an Enemy interacts with the HitSensor. The u32 is the message that was sent from the Enemy to the actor. The first HitSensor is from the enemy, the second one is from our actor.</p>
-		<p><code>receiveOtherMsg</code> is called for any message that the actor receives. The u32 is the message that was sent from the object to the actor. The first HitSensor is from the object, the second one is from our actor.</p><br>
+		<ul>
+			<li><code>attackSensor</code> is called whenever the HitSensor collides with another HitSensor. The first HitSensor is the one from our custom actor, the second one is what it collided with.</li>
+			<li><code>receiveMsgPlayerAttack</code> is called whenever the Player interacts with the HitSensor. The u32 is the message that was sent from the Player to the actor. The first HitSensor is from the player, the second one is from our actor.</li>
+			<li><code>receiveMsgEnemyAttack</code> is called whenever an Enemy interacts with the HitSensor. The u32 is the message that was sent from the Enemy to the actor. The first HitSensor is from the enemy, the second one is from our actor.</li>
+			<li><code>receiveOtherMsg</code> is called for any message that the actor receives. The u32 is the message that was sent from the object to the actor. The first HitSensor is from the object, the second one is from our actor.</li><br>
+		</ul>
 		<p>After that, to actually define the function, place this into your C++ file:</p>
 		<pre><code class="alert alert-primary">bool CustomActor::receiveMsgPlayerAttack (u32 msg, HitSensor *pSender, HitSensor *pReceiver) {
 
