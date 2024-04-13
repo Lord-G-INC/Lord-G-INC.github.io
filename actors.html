@@ -15,10 +15,10 @@
 	<body class="form-control">
 		<img src="Resources/banner.png" onclick="location.href = 'index.html'" style="width: 100%; height: 30vh">
 		<h1>Actor Tutorials</h1>
-		<h3>What counts as an actor?</h3>
-		<p>All complex objects in SMG1 and SMG2 inherit from the <code>LiveActor</code> class. Generally, anything that is not listed in the ProductMapObjDataTable is considered an actor.</p>
-		<div class="alert alert-warning"><i>This tutorial requires <a href="https://github.com/SMGCommunity/Syati">Syati</a> and its dependencies.
+		<div class="alert alert-warning"><i>This tutorial requires C++ knowledge, as well as <a href="https://github.com/SMGCommunity/Syati">Syati</a> and its dependencies.
 		Currently, this code only works with SMG2, though SMG1 support is coming soon.</i></div>
+		<h3>What is an actor?</h3>
+		<p>The base class of every object in Super Mario Galaxy is NameObj. NameObjs are basic actors that can be drawn, but don't have a physical position and state. Most objects goes a step further and inherit from LiveActor. The LiveActor class provides the necessary structure to create more complex objects, NameObjs on the other hand cannot really do that much. For the rest of this guide, when referring to an "actor", I am referring to a LiveActor based object.</p>
 		<h3>Creating your own actor</h3>
 		<p>In a new C++ header file, we first create the class of our actor:</p>
 		<pre><code class="alert alert-primary">#pragma once
@@ -41,14 +41,14 @@ CustomActor::CustomActor(const char *pName) : LiveActor(pName) {
 }</code></pre>
 		<p>The <code>constructor</code> (ctor) gets called when the actor first gets created. For creating <i>placeable</i> objects, you have to inherit <code>LiveActor::LiveActor</code>.
 		<br>Both <code>movement</code> and <code>control</code> are called on every frame, feel free to place in your own code there.
-		<br>The <code>init</code> function gets called on the first frame the actor exists, and this is what it should look like:</p>
+		<br>The <code>init</code> function gets called on the first frame the actor exists, and this is what it should look like. Depending on how complex your actor is, yours may look different:</p>
 		<pre><code class="alert alert-primary">void CustomActor::init (const JMapInfoIter &rIter) {
 	MR::processInitFunction(this, rIter, false);
 	MR::connectToSceneMapObj(this);
 	LiveActor::makeActorAppeared();
 	MR::validateClipping(this);
 }</code></pre>
-		<p><code>MR::processInitFunction</code> does basic actor initialization. You can also call it with a model name instead of a JMapInfoIter, but using the Iter is recommended.
+		<p><code>MR::processInitFunction</code> does basic actor initialization. You can also call it with a model name instead of a JMapInfoIter, in case the name of the model is different to the name of your actor.
 		<br><code>MR::connectToSceneMapObj</code> places the object at the position set in the StageData.
 		<br>However, it <b>does not</b> make it visible, so for visible actors, you also need to call <code>LiveActor::makeActorAppeared</code>. If your actor is supposed to be invisible, you can remove this line.
 		<br>Finally, we call <code>MR::validateClipping</code> to make the actor disappear when the player is far enough away. If you want it to always stay visible, call <code>MR::invalidateClipping</code> instead.
@@ -58,49 +58,69 @@ CustomActor::CustomActor(const char *pName) : LiveActor(pName) {
 		<pre><code class="alert alert-primary">{ "Custom", createExtActor&lt;CustomActor&gt; }</code></pre>
 		<p>This makes the game know what your actor is called. From now on, placing a <code>Custom</code> object in the level will spawn in your actor.</p>
 		<p><b>If your actor is visible, make sure you also have a Custom.arc file in the ObjectData/ folder of SMG2.</b></p>
+		<p>Some additional functions that could be useful as well:</p>
+		<ul>
+			<li><code>MR::getJMapInfoArg0NoInit(rIter, &someMember);</code> - Gets the obj_arg0 set on the object and stores it in <code>someMember</code>. If the arg is NULL, it will not overwrite the contents of <code>someMember</code>. These functions exist for args 0-7, and you can pass a bool *, s32 * or f32 *.</li>
+			<li><code>MR::useStageSwitchWriteDead(this, rIter);</code> - Makes the actor turn on its SW_DEAD when it is killed. You can write to SW_A, SW_B and SW_DEAD. To actually turn it on or off, use <code>MR::onSwitchA(this);</code> or <code>MR::offSwitchA(this);</code>.</li>
+			<li><code>MR::useStageSwitchReadAppear(this, rIter);</code> - Makes the actor spawn when its SW_APPEAR turns on. You can read from SW_APPEAR, SW_A and SW_B. To actually read it and see if it is on, use <code>MR::isOnSwitchA(this);</code>.</li>
+			<li><code>MR::declareStarPiece(this, 3);</code> or <code>MR::declareCoin(this, 1);</code> - Makes the actor hold 3 starbits/1 coin that can be released later on with <code>MR::appearStarPiece</code> or <code>MR::appearCoin...</code>.</li>
+			<li><code>MR::onCalcGravity(this);</code> - Makes the actor respond to the gravity that it is in.</li>
+			<li><code>MR::initShadowVolumeSphere(this, 100.0f);</code> - Gives the actor a round shadow with a radius of 100. There are multiple functions like this that change the respective shape, as well as one that allows you to use a bcsv for shadow data.</li>
+			<li><code>MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f, 0,0f, 0.0f));</code> - Allows the actor to be targeted by the Cursor. The second argument should match the radius of your HitSensor, the last argument is a offset vector.</li>
+			<li><code>initBinder(100.0f, 0.0f, 0);</code> - Adds a binder to the actor that is able to detect walls, floors and ceilings with <code>MR::isBinded...</code>. The first argument should match the radius of your HitSensor.</li>
+		</ul>
 		<h3>About HitSensors</h3>
-		<p>To make the player be able to interact with your actor, you need to set up a HitSensor. HitSensors are always spherical, and you need to specify a radius in game units when creating it.
+		<p>To allow your actor to have a "hitbox" that can interact with the player or other actors, you need to add a HitSensor. HitSensors are always spherical, and you need to specify a radius in game units when creating it.
 		Add the following to your init function:</p>
 		<pre><code class="alert alert-primary">initHitSensor(1);
 MR::addHitSensorMapObj(this, "Body", 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));</code></pre>
 		<p>Firstly, we initialize exactly one HitSensor. Then we add it to our object with the following parameters:</p>
 		<ul>
 			<li><code>this</code> is a pointer to our custom actor.</li>
-			<li><code>"Body"</code> is the name of the sensor we want to apply. When using multiple HitSensors, you can use this to distinguish between them.</li>
+			<li><code>"Body"</code> is the name of the sensor we want to apply. For one sensor you can just use "Body", but when using multiple HitSensors you can use multiple names to distinguish between them.</li>
 			<li><code>8</code> represents the receiverCount. This specifies how many objects can interact with the HitSensor at once.</li>
 			<li><code>100.0f</code> is the radius of the HitSensor, in this case 100 units.</li>
-			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the origin of our actor.</li>
+			<li><code>TVec3f(0.0f, 0.0f, 0.0f)</code> represents the offset from the main actor. Here we simply create a new 0, 0, 0 vector so that the HitSensor gets placed at the origin of our actor. You can simply change each coordinate based on your needs.</li>
 		</ul>
-		<p>Now we also need to handle something colliding with that HitSensor. To do that, first add the following to your header file:</p>
+		<p>It is also possible to add different types of HitSensors by using a different <code>MR::addHitSensor...</code> function, or by simply using <code>MR::addHitSensor</code> itself, which adds a u32 parameter for the type of sensor:</p>
+		<pre><code class="alert alert-primary">MR::addHitSensor(this, "Body", ATYPE_MAP_OBJ, 8, 100.0f, TVec3f(0));</code></pre>
+		<p>To see which types you can use or what functions are available, check the HitSensor.h file in Syati's include/Game/LiveActor directory.</p>
+		<p>Once our HitSensor is added, we also need to handle something interacting with that HitSensor. For this, you can use four different functions depending on your needs.</p>
 		<pre><code class="alert alert-primary">class CustomActor : public LiveActor {
 public:
 	// ...
+	virtual void attackSensor(HitSensor *, HitSensor *);
 	virtual bool receiveMsgPlayerAttack(u32, HitSensor *, HitSensor *);
+	virtual bool receiveMsgEnemyAttack(u32, HitSensor *, HitSensor *);
+	virtual bool receiveOtherMsg(u32, HitSensor *, HitSensor *);
 	// ...
 }</code></pre>
-		<p>After that, to actually define the function, place this function into your C++ file:</p>
+		<div class="alert alert-primary">To see which message you are working with or what functions are available, look at the HitSensor.h file in Syati's include/Game/LiveActor directory.</div>
+		<ul>
+			<li><code>attackSensor</code> is called whenever the HitSensor collides with another HitSensor. The first HitSensor is the one from our custom actor, the second one is what it collided with.</li>
+			<li><code>receiveMsgPlayerAttack</code> is called whenever the Player interacts with the HitSensor. The u32 is the message that was sent from the Player to the actor. The first HitSensor is from the player, the second one is from our actor.</li>
+			<li><code>receiveMsgEnemyAttack</code> is called whenever an Enemy interacts with the HitSensor. The u32 is the message that was sent from the Enemy to the actor. The first HitSensor is from the enemy, the second one is from our actor.</li>
+			<li><code>receiveOtherMsg</code> is called for any message that the actor receives. The u32 is the message that was sent from the object to the actor. The first HitSensor is from the object, the second one is from our actor.</li><br>
+		</ul>
+		<p>After that, to actually define the function, place this into your C++ file:</p>
 		<pre><code class="alert alert-primary">bool CustomActor::receiveMsgPlayerAttack (u32 msg, HitSensor *pSender, HitSensor *pReceiver) {
 
 }</code></pre>
-		<p>Here we are given the type of collision that occured (msg), as well as two HitSensor pointers.
-		To figure out what type the sender is, you can call one of the 25 <code>MR::isSensor...</code> functions. When checking for the player, using <code>MR::isSensorPlayerOrYoshiOrRide(pSender)</code> is recommended.
-		To figure out what type of interaction ocurred, use one of the 105 <code>MR::isMsg</code> functions. For example, the player spin-attacking your actor can be checked by calling <code>MR::isMsgPlayerSpinAttack(msg)</code>.
-		Remember that the function has to return a bool. This is needed to let the sender of the message know that there was an interaction (<code>true</code>) or that it was simply ignored (<code>false</code>). For example, if the player interacts with it and true is returned, a certain particle effect will be created to show the impact.</p>
-		<div class="alert alert-primary">To see which functions best fit your purpose, look at the HitSensor.h file in Syati's include/Game/LiveActor directory.</div>
+		<p>To figure out what type the sender is, you can call one of the 25 <code>MR::isSensor...</code> functions. When checking for the player, using <code>MR::isSensorPlayerOrYoshiOrRide(pSender)</code> is recommended.
+		To figure out what type of interaction ocurred, use one of the 105 <code>MR::isMsg</code> functions or manually compare it to the respective number. For example, the player spin-attacking your actor can be checked by calling <code>MR::isMsgPlayerSpinAttack(msg)</code>.
+		Remember that any of these functions (except for <code>attackSensor</code>) has to return a bool. This is needed to let the sender of the message know that there was an interaction (<code>true</code>) or that it was simply ignored (<code>false</code>). For example, if the player interacts with it and true is returned, a certain particle effect may be created to show the impact.</p>
 		<h3>About Collision</h3>
 		<p>Some actors also feature collision on top of a HitSensor, which needs to be initialized seperately.
 		To do that, add this to the init function of your actor:</p>
-		<pre><code class="alert alert-primary">MR::initCollisionParts(this, "Custom", getSensor("body"), nullptr);</code></pre>
+		<pre><code class="alert alert-primary">MR::initCollisionParts(this, "Custom", getSensor("body"), NULL);</code></pre>
 		<p>This function gets passed the following arguments:</p>
 		<ul>
 			<li><code>this</code> is a pointer to our custom actor.</li>
 			<li><code>"Custom"</code> is the name of the collision file that the game should use. In this case, the game uses the Custom.kcl file in ObjectData/Custom.arc.</li>
 			<li><code>getSensor("Body")</code> is needed to let the game know where to place the CollisionParts. Here we simply get the sensor we just created named "Body".</li>
-			<li><code>nullptr</code> is usually a MtxPtr. When given a valid MtxPtr, the game will tie the collision to that matrix. Otherwise, it stays at the HitSensor's position.</li>
+			<li><code>NULL</code> is usually a MtxPtr. When given a valid MtxPtr, the game will tie the collision to that matrix. Otherwise, it stays at the HitSensor's position.</li>
 		</ul>
-		<p>Now, if you want the actor to have collision, you probably also want it to interact with walls, floors and ceilings. To do that, initialize a binder:</p>
-		<pre><code class="alert alert-primary">initBinder(100.0f, 0.0f, 0);</code></pre>
-		<p>The first argument should match the radius of your HitSensor. Now your actor will no longer pass through walls or floor, and you can check its state by running any of the <code>MR::isBinded...</code> functions.</p>
+		<p>From there, you can also turn this collision on or off by using <code>MR::validateCollisionParts(this);</code> or <code>MR::invalidateCollisionParts(this);</code></p>
 		<h3>Using ActorInfo</h3>
 		<p>You can eliminate the need for a bunch of code in your <code>init</code> function by using a few ActorInfo bcsv files. Here is an example of a InitActor.bcsv from the <a href="projects.html#pt">Project Template</a>'s RedCoin:</p>
 		<img src="https://media.discordapp.net/attachments/1119750120657911849/1150562740436471950/image.png?width=833&height=359">
